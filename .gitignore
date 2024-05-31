@@ -4,6 +4,7 @@
 
 # Custom
 .env
+tmp/
 
 
 # Binaries for programs and plugins

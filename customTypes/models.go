@@ -1,16 +1,9 @@
-package user
+package customtypes
 
 import "database/sql"
 
-type User struct {
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	Password  string `json:"password"`
-	Location  string `json:"location"`
-}
+// Custom data types
 
-// Customer type to parse json payload
-// email and phone number can be null
 type LinkPrecedence string
 
 const (
@@ -36,6 +29,7 @@ type Contact struct {
 	PhoneNumbers        []string `json:"phoneNumbers"`
 	SecondaryContactIds []int    `json:"secondaryContactIds"`
 }
+
 type CustomerSummaryData struct {
 	Contact Contact `json:"contact"`
 }

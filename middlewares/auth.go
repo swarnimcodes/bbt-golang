@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -11,7 +10,6 @@ import (
 
 func Auth(next http.Handler) http.Handler {
 	bearerToken := os.Getenv("BEARER_TOKEN")
-	log.Printf("Bearer Token from .env: %s\n", bearerToken)
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")

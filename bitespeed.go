@@ -10,7 +10,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/swarnimcodes/bitespeed-backend-task/handlers"
-	"github.com/swarnimcodes/bitespeed-backend-task/handlers/user"
+	"github.com/swarnimcodes/bitespeed-backend-task/handlers/customer"
 	"github.com/swarnimcodes/bitespeed-backend-task/middlewares"
 )
 
@@ -67,23 +67,15 @@ func main() {
 	router := NewRouter()
 
 	// global middlewares
-	// TODO: use an array of middlewares to apply globally
-	//router.AddGlobalMiddleware(middlewares.Log)
-	//router.AddGlobalMiddleware(middlewares.PrintHeaders)
+
+	router.AddGlobalMiddleware(middlewares.Auth)
 
 	// handle request with route-specific middlewares
-	// router.Handle("GET /", http.HandlerFunc(handlers.Hello), middlewares.JwtAuth)
 	router.Handle("GET /", http.HandlerFunc(handlers.Hello))
-	router.Handle("POST /createJWT", http.HandlerFunc(handlers.GenerateJWT), middlewares.Auth)
-	router.Handle("GET /generateBearerToken", http.HandlerFunc(handlers.GenerateBearerToken), middlewares.Auth)
-
-	// User routes
-	// router.Handle("POST /createUser", http.HandlerFunc(user.CreateUser), middlewares.Auth)
-	// router.Handle("GET /getUser", http.HandlerFunc(user.FetchUser), middlewares.Auth)
 
 	// Bitespeed
-	router.Handle("GET /customers", http.HandlerFunc(user.GetAllCustomers), middlewares.Auth)
-	router.Handle("POST /identify", http.HandlerFunc(user.IdentifyCustomer), middlewares.Auth)
+	router.Handle("GET /customers", http.HandlerFunc(customer.GetAllCustomers))
+	router.Handle("POST /identify", http.HandlerFunc(customer.IdentifyCustomer))
 
 	port := os.Getenv("PORT")
 	if port == "" {
