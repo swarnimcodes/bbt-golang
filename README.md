@@ -9,11 +9,12 @@
 
 API Base URL := `https://pythonapi.mastersofterp.in/BBT/`
 
-1. `GET: /`
+1. `GET /`
 Endpoint to check if the API is accessible
 2. `GET /customers`
 Endpoint to fetch data for all users in the database
-3. `POST /identify`
+3. `DELETE /clearDB` - Requires a valid bearer token to be sent to reset the database
+4. `POST /identify`
 Endpoint  to identify, categorise, and process an new incoming request.
 
 - Input:

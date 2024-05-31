@@ -68,13 +68,15 @@ func main() {
 
 	// global middlewares
 
-	router.AddGlobalMiddleware(middlewares.Auth)
+	// removed auth from global middlewares
+	// router.AddGlobalMiddleware(middlewares.Auth)
 
 	// handle request with route-specific middlewares
 	router.Handle("GET /", http.HandlerFunc(handlers.Hello))
 
 	// Bitespeed
 	router.Handle("GET /customers", http.HandlerFunc(customer.GetAllCustomers))
+	router.Handle("DELETE /clearDB", http.HandlerFunc(customer.ClearDb), middlewares.Auth)
 	router.Handle("POST /identify", http.HandlerFunc(customer.IdentifyCustomer))
 
 	port := os.Getenv("PORT")
