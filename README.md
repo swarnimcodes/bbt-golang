@@ -60,9 +60,10 @@ Endpoint  to identify, categorise, and process an new incoming request.
 
 4. Run
 
-```sh
-./bitespeed
-```
+    ```sh
+    ./bitespeed
+    ```
 
 5. Misc
-Refer to the `example.env` file for required environment variables
+
+    Refer to the `example.env` file for required environment variables
