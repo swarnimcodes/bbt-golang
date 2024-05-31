@@ -56,7 +56,7 @@ Endpoint  to identify, categorise, and process an new incoming request.
 3. Build
 
     ```sh
-    go build
+    go build -o bitespeed
     ```
 
 4. Run
