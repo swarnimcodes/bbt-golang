@@ -3,6 +3,9 @@ package sqlutils
 import "database/sql"
 
 func emailExists(db *sql.DB, email string) (bool, error) {
+	if email == "" {
+		return true, nil
+	}
 	query := `
 		SELECT EXISTS(
 			SELECT 1 FROM Contact
@@ -16,6 +19,9 @@ func emailExists(db *sql.DB, email string) (bool, error) {
 }
 
 func phoneNumberExists(db *sql.DB, phoneNumber string) (bool, error) {
+	if phoneNumber == "" {
+		return true, nil
+	}
 	query := `
 		SELECT EXISTS(
 			SELECT 1 FROM Contact

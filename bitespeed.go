@@ -80,7 +80,7 @@ func main() {
 	router.Handle("POST /identify", http.HandlerFunc(customer.IdentifyCustomer))
 
 	port := os.Getenv("PORT")
-	if port == "" {
+  if port =="" {
 		log.Println("No port specified in `.env`. Using default port `8080`.")
 		port = "8080"
 	}

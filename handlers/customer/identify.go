@@ -118,10 +118,15 @@ func IdentifyCustomer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO: check if phone number or email exists in database.
-	phoneNumber := customer.PhoneNumber
-	email := customer.Email
+	var phoneNumber, email string
+	if customer.PhoneNumber != nil {
+		phoneNumber = *customer.PhoneNumber
+	}
+	if customer.Email != nil {
+		email = *customer.Email
+	}
 
-	familyMembers, err := sqlutils.GetRelatedMatches(db, *phoneNumber, *email)
+	familyMembers, err := sqlutils.GetRelatedMatches(db, phoneNumber, email)
 	if err != nil {
 		errMsg := fmt.Sprintf("could not get related matches from the database: %v", err)
 		utils.SendErrorResponse(w, errMsg, http.StatusInternalServerError)
@@ -132,7 +137,7 @@ func IdentifyCustomer(w http.ResponseWriter, r *http.Request) {
 
 	// if length of familyMembers == 0 add a new primary account
 	if len(familyMembers) == 0 {
-		isInformationNew, err := sqlutils.NewInformationReceived(db, *phoneNumber, *email)
+		isInformationNew, err := sqlutils.NewInformationReceived(db, phoneNumber, email)
 		if err != nil {
 			errMsg := fmt.Sprintf("error in determining if information received is new: %v", err)
 			utils.SendErrorResponse(w, errMsg, http.StatusInternalServerError)
@@ -140,7 +145,7 @@ func IdentifyCustomer(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if isInformationNew {
-			err := sqlutils.InsertNewPrimaryCustomer(db, *phoneNumber, *email)
+			err := sqlutils.InsertNewPrimaryCustomer(db, phoneNumber, email)
 			if err != nil {
 				errMsg := fmt.Sprintf("could not insert new contact into the database: %v", err)
 				utils.SendErrorResponse(w, errMsg, http.StatusInternalServerError)
@@ -150,7 +155,7 @@ func IdentifyCustomer(w http.ResponseWriter, r *http.Request) {
 
 		// now ideally the `GetRelatedMatches` function should return the newly
 		// inserted entry itself
-		newFamilyMembers, err := sqlutils.GetRelatedMatches(db, *phoneNumber, *email)
+		newFamilyMembers, err := sqlutils.GetRelatedMatches(db, phoneNumber, email)
 		if err != nil {
 			errMsg := fmt.Sprintf("could not get related matches from the database: %v", err)
 			utils.SendErrorResponse(w, errMsg, http.StatusInternalServerError)
@@ -182,14 +187,14 @@ func IdentifyCustomer(w http.ResponseWriter, r *http.Request) {
 
 	if primaryAccountCount == 1 {
 		// insert a secondary account
-		isInformationNew, err := sqlutils.NewInformationReceived(db, *phoneNumber, *email)
+		isInformationNew, err := sqlutils.NewInformationReceived(db, phoneNumber, email)
 		if err != nil {
 			errMsg := fmt.Sprintf("error in determining if information received is new: %v", err)
 			utils.SendErrorResponse(w, errMsg, http.StatusInternalServerError)
 			return
 		}
 		if isInformationNew {
-			if err := sqlutils.InsertNewSecondaryCustomer(db, *phoneNumber, *email, primaryAccountIds[0]); err != nil {
+			if err := sqlutils.InsertNewSecondaryCustomer(db, phoneNumber, email, primaryAccountIds[0]); err != nil {
 				errMsg := fmt.Sprintf("could not insert secondary account: %v", err)
 				utils.SendErrorResponse(w, errMsg, http.StatusInternalServerError)
 				return
@@ -197,7 +202,7 @@ func IdentifyCustomer(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// TODO: unnecessary DB call if information received is not new?
-		newFamilyMembers, err := sqlutils.GetRelatedMatches(db, *phoneNumber, *email)
+		newFamilyMembers, err := sqlutils.GetRelatedMatches(db, phoneNumber, email)
 		if err != nil {
 			errMsg := fmt.Sprintf("could not get related matches from the database: %v", err)
 			utils.SendErrorResponse(w, errMsg, http.StatusInternalServerError)
@@ -242,7 +247,7 @@ func IdentifyCustomer(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// get family again?
-		newFamilyMembers, err := sqlutils.GetRelatedMatches(db, *phoneNumber, *email)
+		newFamilyMembers, err := sqlutils.GetRelatedMatches(db, phoneNumber, email)
 		if err != nil {
 			errMsg := fmt.Sprintf("could not get related matches from the database: %v", err)
 			utils.SendErrorResponse(w, errMsg, http.StatusInternalServerError)
